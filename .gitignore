@@ -1,0 +1,8 @@
+book/
+
+*build*/
+
+.idea/
+
+.vs/
+.vscode/
