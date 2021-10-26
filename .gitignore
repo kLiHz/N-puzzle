@@ -2,6 +2,9 @@ book/
 
 *build*/
 
+*.exe
+*.out
+
 .idea/
 
 .vs/
