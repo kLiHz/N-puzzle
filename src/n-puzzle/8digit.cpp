@@ -1,35 +1,33 @@
 #include "NPuzzleStatus.hpp"
 #include <iostream>
 #include <queue>
+#include <map>
 #include <set>
 
-template<int N>
-class NPuzzleSearchMap {
-    std::vector<int> former_of; // parent status code
+template<typename StatusType>
+class SearchMap {
+    std::map<StatusType, StatusType> former_of; // parent status code
 public:
-    NPuzzleSearchMap() {
-        former_of.resize(fact(N*N));
-        for (auto & v : former_of) { v = -1; }
+    SearchMap() {}
+    auto visited(StatusType const & s) {
+        return former_of.find(s) != former_of.end();
     }
-    auto visited(NPuzzleStatus<N> const & s) {
-        return former_of[s.hash()] != -1;
+    auto add(StatusType const & s, StatusType const & parent) {
+        former_of[s] = parent;
     }
-    auto add(NPuzzleStatus<N> const & s, NPuzzleStatus<N> const & parent) {
-        former_of[s.hash()] = parent.hash();
-    }
-    auto get_parent(NPuzzleStatus<N> const & s) {
-        if (former_of[s.hash()] != -1)
-            return NPuzzleStatus<N>::unhash(former_of[s.hash()]);
-        else return NPuzzleStatus<N>({-1});
+    auto get_parent(StatusType const & s) {
+        if (former_of.find(s) != former_of.end())
+            return former_of[s];
+        else return StatusType({-1});
     }
 };
 
 // 宽度优先搜索
 
-template<int N>
-auto BFS(NPuzzleStatus<N> const & init, NPuzzleStatus<N> const & target) {
-    std::queue<NPuzzleStatus<N>> open;
-    NPuzzleSearchMap<N> map;
+template<typename StatusType>
+auto BFS(StatusType const & init, StatusType const & target) {
+    std::queue<StatusType> open;
+    SearchMap<StatusType> map;
     open.push(init);
     while (!open.empty()) {
         auto current = open.front();
@@ -53,11 +51,12 @@ auto BFS(NPuzzleStatus<N> const & init, NPuzzleStatus<N> const & target) {
 }
 
 int main() {
-    NPuzzleStatus<3> init({
+    using Status = NPuzzleStatus<3>;
+    Status init({
         2,8,3,
         1,0,4,
         7,6,5});
-    NPuzzleStatus<3> target({
+    Status target({
         1,2,3,
         8,0,4,
         7,6,5});

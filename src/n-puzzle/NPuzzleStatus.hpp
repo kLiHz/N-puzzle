@@ -12,8 +12,14 @@ inline constexpr int fact(int n) {
 
 template<int N = 3>
 class NPuzzleStatus {
+private:
     int data[N*N];
 public:
+    NPuzzleStatus() {
+        for (int i = 0; i < N*N; ++i) {
+            data[i] = 0;
+        }
+    };
     NPuzzleStatus(std::initializer_list<int> l) {
         int i = 0;
         for (auto const & v : l) {
@@ -30,7 +36,7 @@ public:
             if (i == N*N) break;
         }
     }
-    NPuzzleStatus(std::array<int, N*N> a) {
+    NPuzzleStatus(std::array<int, N*N> const & a) {
         for (int i = 0; i < N*N; ++i) { data[i] = a[i]; }
     }
     NPuzzleStatus(int d[N*N]) {
@@ -93,6 +99,13 @@ public:
         return true;
     }
     bool operator!= (const NPuzzleStatus<N> & other) const { return !(*this == other); }
+    bool operator< (const NPuzzleStatus<N> & other) const {
+        for (int i = 0; i < N*N; ++i) {
+            if (this->data[i] != other.data[i]) 
+                return this->data[i] < other.data[i];
+        }
+        return false;
+    }
     auto hash() const {
         // Assume that data is an arrangement of natural numbers from 0 to N*N
         std::array<bool, N*N> appeared;
