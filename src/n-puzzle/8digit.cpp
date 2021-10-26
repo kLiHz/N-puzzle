@@ -39,15 +39,7 @@ auto BFS(StatusType const & init, StatusType const & target) {
         }
         open.pop();
     }
-    std::vector<NPuzzleStatus<N>> v;
-    auto current = open.front();
-    v.push_back(current);
-    while (current != init) {
-        auto parent = map.get_parent(current);
-        v.push_back(parent);
-        current = parent;
-    }
-    return v;
+    return map;
 }
 
 int main() {
@@ -62,6 +54,17 @@ int main() {
         7,6,5});
     std::cout << "Initial status: \n" << to_string(init) << "\n";
     std::cout << "Target status: \n" << to_string(target) << "\n";
-    std::cout << "Backtrace path: \n";
-    std::cout << BFS(init, target);
+    
+    auto bfs_search_map = BFS<Status>(init, target);
+    
+    std::vector<Status> v;
+    auto current = target;
+    v.push_back(current);
+    while (current != init) {
+        auto parent = bfs_search_map.get_parent(current);
+        v.push_back(parent);
+        current = parent;
+    }
+
+    std::cout << "Backtrace path: \n" << v;
 }
