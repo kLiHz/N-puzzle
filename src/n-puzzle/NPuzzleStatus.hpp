@@ -1,3 +1,5 @@
+#ifndef NPUZZLE_STATUS_HPP
+#define NPUZZLE_STATUS_HPP
 
 #include <string>
 #include <string_view>
@@ -159,3 +161,5 @@ inline std::ostream& operator<< (std::ostream& os, const std::vector<NPuzzleStat
     for (auto const & l : lines) { os << l << "\n"; }
     return os;
 }
+
+#endif  // NPUZZLE_STATUS_HPP

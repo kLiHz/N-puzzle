@@ -1,3 +1,6 @@
+#ifndef SEARCH_MAP_HPP
+#define SEARCH_MAP_HPP
+
 #include <map>
 
 template<typename StatusType>
@@ -28,3 +31,5 @@ public:
         else return StatusType({-1});
     }
 };
+
+#endif  // SEARCH_MAP_HPP
