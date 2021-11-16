@@ -1,57 +1,6 @@
-#include "NPuzzleStatus.hpp"
 #include <iostream>
-#include <queue>
-#include <map>
-#include <set>
-
-template<typename StatusType>
-class SearchMap {
-    StatusType root;
-    std::map<StatusType, StatusType> former_of; // parent status code
-public:
-    SearchMap(StatusType const & s) : root(s) {}
-    auto depth_of(StatusType const & a) {
-        auto current = a;
-        auto cnt = 0;
-        while (current != root) {
-            auto parent = this->get_parent(current);
-            cnt += 1;
-            current = parent;
-        }
-        return cnt;
-    }
-    auto visited(StatusType const & s) const {
-        return former_of.find(s) != former_of.end();
-    }
-    auto add(StatusType const & s, StatusType const & parent) {
-        former_of[s] = parent;
-    }
-    auto get_parent(StatusType const & s) {
-        if (former_of.find(s) != former_of.end())
-            return former_of[s];
-        else return StatusType({-1});
-    }
-};
-
-// 宽度优先搜索
-
-template<typename StatusType>
-auto BFS(StatusType const & init, StatusType const & target) {
-    std::queue<StatusType> open;
-    SearchMap<StatusType> map(init);
-    open.push(init);
-    while (!open.empty()) {
-        auto current = open.front();
-        if (current == target) { break; }
-        for (auto const & s : current.possible_moves()) {
-            if (map.visited(s)) continue;
-            open.push(s);
-            map.add(s, current);
-        }
-        open.pop();
-    }
-    return map;
-}
+#include "NPuzzleStatus.hpp"
+#include "SearchMap.hpp"
 
 // 深度优先搜索
 
@@ -107,15 +56,6 @@ int main() {
         }
         return v;
     };
-
-    auto bfs_search_map = BFS<Status>(init, target);
-
-    auto bfs_found = bfs_search_map.visited(target);
-    std::cout << "BFS found: " << std::boolalpha << bfs_found << "\n";
-
-    if (bfs_found) {
-        std::cout << "Backtrace path: \n" << back_trace(target, init, bfs_search_map);
-    }
     
     auto dfs_search_map = DFS<Status>(init, target, 10);
 
